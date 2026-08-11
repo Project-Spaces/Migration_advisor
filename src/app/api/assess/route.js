@@ -1,14 +1,13 @@
 import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime";
 
-const client = new BedrockRuntimeClient({
-  region: "us-east-1",
-  credentials: {
-    accessKeyId: process.env.BROCK_KEY_ID,
-    secretAccessKey: process.env.BROCK_SECRET,
-  },
-});
-
 export async function POST(request) {
+  const client = new BedrockRuntimeClient({
+    region: "us-east-1",
+    credentials: {
+      accessKeyId: process.env.BROCK_KEY_ID,
+      secretAccessKey: process.env.BROCK_SECRET,
+    },
+  });
   const {
     workloads,
     currentEnvironment,
