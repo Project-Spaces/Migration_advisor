@@ -11,9 +11,13 @@ export default function AssessmentForm({ onSubmit, loading }) {
   const [form, setForm] = useState({
     workloads: "",
     currentEnvironment: "",
+    industry: "",
     userCount: "",
     dataSize: "",
     priorities: "",
+    painPoints: "",
+    budget: "",
+    awsExpertise: "",
     compliance: "",
   });
 
@@ -29,11 +33,10 @@ export default function AssessmentForm({ onSubmit, loading }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
         {/* Workloads */}
         <div className="md:col-span-2">
-          <label className={labelClass}>
-            What workloads are you running? *
-          </label>
+          <label className={labelClass}>What workloads are you running? *</label>
           <textarea
             name="workloads"
             value={form.workloads}
@@ -43,6 +46,44 @@ export default function AssessmentForm({ onSubmit, loading }) {
             placeholder="e.g. Java EE application on WebLogic, Oracle 12c database, file storage server, internal HR portal"
             className={inputClass}
           />
+        </div>
+
+        {/* Pain Points */}
+        <div className="md:col-span-2">
+          <label className={labelClass}>What are your current pain points? *</label>
+          <textarea
+            name="painPoints"
+            value={form.painPoints}
+            onChange={handleChange}
+            required
+            rows={2}
+            placeholder="e.g. High infrastructure costs, frequent downtime, difficult to scale during peak periods, ageing hardware"
+            className={inputClass}
+          />
+        </div>
+
+        {/* Industry */}
+        <div>
+          <label className={labelClass}>Industry / Sector *</label>
+          <select
+            name="industry"
+            value={form.industry}
+            onChange={handleChange}
+            required
+            className={inputClass}
+          >
+            <option value="">Select industry</option>
+            <option>Healthcare</option>
+            <option>Financial Services / Banking</option>
+            <option>Retail / E-Commerce</option>
+            <option>Manufacturing</option>
+            <option>Government / Public Sector</option>
+            <option>Technology / SaaS</option>
+            <option>Education</option>
+            <option>Media & Entertainment</option>
+            <option>Energy & Utilities</option>
+            <option>Other</option>
+          </select>
         </div>
 
         {/* Current Environment */}
@@ -102,9 +143,9 @@ export default function AssessmentForm({ onSubmit, loading }) {
           </select>
         </div>
 
-        {/* Priorities */}
+        {/* Migration Priority */}
         <div>
-          <label className={labelClass}>Migration priorities *</label>
+          <label className={labelClass}>Primary migration priority *</label>
           <select
             name="priorities"
             value={form.priorities}
@@ -115,9 +156,47 @@ export default function AssessmentForm({ onSubmit, loading }) {
             <option value="">Select priority</option>
             <option>Cost reduction</option>
             <option>Speed of migration</option>
-            <option>Minimal disruption</option>
+            <option>Minimal disruption to operations</option>
             <option>Security and compliance</option>
             <option>Scalability and performance</option>
+            <option>Modernisation and agility</option>
+          </select>
+        </div>
+
+        {/* Budget */}
+        <div>
+          <label className={labelClass}>Migration budget range *</label>
+          <select
+            name="budget"
+            value={form.budget}
+            onChange={handleChange}
+            required
+            className={inputClass}
+          >
+            <option value="">Select budget</option>
+            <option>Under $50,000</option>
+            <option>$50,000 – $200,000</option>
+            <option>$200,000 – $1,000,000</option>
+            <option>Over $1,000,000</option>
+            <option>Not yet defined</option>
+          </select>
+        </div>
+
+        {/* AWS Expertise */}
+        <div>
+          <label className={labelClass}>In-house AWS expertise *</label>
+          <select
+            name="awsExpertise"
+            value={form.awsExpertise}
+            onChange={handleChange}
+            required
+            className={inputClass}
+          >
+            <option value="">Select level</option>
+            <option>None — we would need full support</option>
+            <option>Basic — some cloud awareness, no hands-on</option>
+            <option>Intermediate — some AWS experience</option>
+            <option>Advanced — experienced AWS team in-house</option>
           </select>
         </div>
 
@@ -136,6 +215,7 @@ export default function AssessmentForm({ onSubmit, loading }) {
             className={inputClass}
           />
         </div>
+
       </div>
 
       <button

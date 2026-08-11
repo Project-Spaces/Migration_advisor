@@ -4,6 +4,9 @@ const complexityColor = {
   High: "text-red-400 bg-red-400/10 border-red-400/30",
 };
 
+const phaseColors = ["border-orange-500/40", "border-blue-500/40", "border-purple-500/40"];
+const phaseDotColors = ["bg-orange-500", "bg-blue-500", "bg-purple-500"];
+
 export default function ResultsPanel({ assessment }) {
   return (
     <div className="mt-10 space-y-6">
@@ -11,23 +14,18 @@ export default function ResultsPanel({ assessment }) {
         <h3 className="text-xl font-bold text-white mb-6">Migration Assessment</h3>
       </div>
 
-      {/* Strategy */}
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-        <div className="flex items-center justify-between mb-3">
-          <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">
-            Recommended Strategy
-          </h4>
-          <span className="text-xs bg-orange-500/20 text-orange-400 border border-orange-500/30 px-3 py-1 rounded-full font-medium">
-            {assessment.strategy}
-          </span>
-        </div>
-        <p className="text-gray-300 text-sm leading-relaxed">{assessment.strategy_reasoning}</p>
+      {/* Executive Summary */}
+      <div className="bg-gradient-to-br from-orange-500/10 to-gray-900 border border-orange-500/30 rounded-xl p-6">
+        <h4 className="text-sm font-medium text-orange-400 uppercase tracking-wider mb-3">
+          Executive Summary
+        </h4>
+        <p className="text-gray-200 text-sm leading-relaxed">{assessment.executive_summary}</p>
       </div>
 
-      {/* Complexity + Timeline */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-          <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-3">
+      {/* Metrics Row */}
+      <div className="grid grid-cols-3 gap-4">
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+          <h4 className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">
             Complexity
           </h4>
           <span
@@ -37,15 +35,73 @@ export default function ResultsPanel({ assessment }) {
           >
             {assessment.complexity}
           </span>
-          <p className="text-gray-400 text-xs mt-3 leading-relaxed">
+          <p className="text-gray-500 text-xs mt-2 leading-relaxed">
             {assessment.complexity_reasoning}
           </p>
         </div>
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-          <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-3">
-            Estimated Timeline
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+          <h4 className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">
+            Timeline
           </h4>
-          <p className="text-2xl font-bold text-white">{assessment.estimated_timeline}</p>
+          <p className="text-xl font-bold text-white">{assessment.estimated_timeline}</p>
+        </div>
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+          <h4 className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">
+            Est. Cost Savings
+          </h4>
+          <p className="text-green-400 text-sm font-semibold leading-relaxed">
+            {assessment.estimated_cost_savings}
+          </p>
+        </div>
+      </div>
+
+      {/* Workload Breakdown — per-workload 7Rs */}
+      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">
+          Workload Strategy Breakdown
+        </h4>
+        <div className="space-y-3">
+          {assessment.workload_breakdown.map((item, i) => (
+            <div key={i} className="flex gap-4 p-3 bg-gray-800/50 rounded-lg">
+              <span className="shrink-0 text-xs font-bold bg-orange-500/20 text-orange-400 border border-orange-500/30 px-2 py-1 rounded-md h-fit">
+                {item.recommended_r}
+              </span>
+              <div>
+                <p className="text-white text-sm font-semibold">{item.workload}</p>
+                <p className="text-gray-400 text-xs mt-0.5">{item.reasoning}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Migration Phases */}
+      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">
+          Migration Phases
+        </h4>
+        <div className="space-y-4">
+          {assessment.phases.map((phase, i) => (
+            <div
+              key={i}
+              className={`border-l-2 pl-4 ${phaseColors[i] || "border-gray-600"}`}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <div className={`w-2 h-2 rounded-full shrink-0 ${phaseDotColors[i] || "bg-gray-400"}`} />
+                <p className="text-white text-sm font-semibold">{phase.phase}</p>
+                <span className="text-xs text-gray-500 ml-auto">{phase.duration}</span>
+              </div>
+              <p className="text-gray-400 text-xs mb-2">{phase.description}</p>
+              <ul className="space-y-1">
+                {phase.key_actions.map((action, j) => (
+                  <li key={j} className="text-xs text-gray-300 flex gap-2">
+                    <span className="text-gray-500">→</span>
+                    {action}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -60,8 +116,15 @@ export default function ResultsPanel({ assessment }) {
               <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center shrink-0">
                 <span className="text-orange-400 text-xs font-bold">{i + 1}</span>
               </div>
-              <div>
-                <p className="text-white text-sm font-semibold">{item.service}</p>
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <p className="text-white text-sm font-semibold">{item.service}</p>
+                  {item.phase && (
+                    <span className="text-xs text-gray-500 bg-gray-700 px-2 py-0.5 rounded">
+                      {item.phase}
+                    </span>
+                  )}
+                </div>
                 <p className="text-gray-400 text-xs mt-0.5">{item.purpose}</p>
                 {item.replaces && (
                   <p className="text-gray-500 text-xs mt-0.5">Replaces: {item.replaces}</p>
@@ -80,7 +143,7 @@ export default function ResultsPanel({ assessment }) {
         <ul className="space-y-2">
           {assessment.risks.map((risk, i) => (
             <li key={i} className="flex gap-3 text-sm text-gray-300">
-              <span className="text-red-400 mt-0.5">⚠</span>
+              <span className="text-red-400 mt-0.5 shrink-0">⚠</span>
               {risk}
             </li>
           ))}
