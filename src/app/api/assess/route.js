@@ -101,7 +101,13 @@ Respond in the following JSON format only, no additional text:
   } catch (err) {
     console.error("Bedrock error:", err);
     return Response.json(
-      { error: err.message, name: err.name, region: process.env.BEDROCK_REGION || process.env.AWS_REGION },
+      {
+        error: err.message,
+        name: err.name,
+        keyDefined: !!process.env.BROCK_KEY_ID,
+        secretDefined: !!process.env.BROCK_SECRET,
+        keyLength: process.env.BROCK_KEY_ID?.length ?? 0,
+      },
       { status: 500 }
     );
   }
