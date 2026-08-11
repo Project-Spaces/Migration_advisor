@@ -91,11 +91,18 @@ Respond in the following JSON format only, no additional text:
     }),
   });
 
-  const response = await client.send(command);
-  const responseBody = JSON.parse(new TextDecoder().decode(response.body));
-  const raw = responseBody.content[0].text;
-  const text = raw.replace(/^```json\s*/i, "").replace(/```\s*$/, "").trim();
-  const assessment = JSON.parse(text);
-
-  return Response.json({ assessment });
+  try {
+    const response = await client.send(command);
+    const responseBody = JSON.parse(new TextDecoder().decode(response.body));
+    const raw = responseBody.content[0].text;
+    const text = raw.replace(/^```json\s*/i, "").replace(/```\s*$/, "").trim();
+    const assessment = JSON.parse(text);
+    return Response.json({ assessment });
+  } catch (err) {
+    console.error("Bedrock error:", err);
+    return Response.json(
+      { error: err.message, name: err.name, region: process.env.BEDROCK_REGION || process.env.AWS_REGION },
+      { status: 500 }
+    );
+  }
 }
